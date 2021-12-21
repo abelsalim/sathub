@@ -29,8 +29,9 @@ from flask import Flask
 
 app = Flask(__name__)
 app.debug = conf.is_debug
+default= 'Nullum secretum est ubi regnat ebrietas'
 app.secret_key = os.environ.get('SATHUB_SECRET_KEY') or \
-        base64.b64encode('Nullum secretum est ubi regnat ebrietas')
+        base64.b64encode(default.encode('ascii'))
 
 import sathub.api
 import sathub.views

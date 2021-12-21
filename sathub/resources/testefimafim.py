@@ -19,7 +19,7 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -36,7 +36,7 @@ parser.add_argument('dados_venda',
         help=u'XML contendo os dados do CF-e de venda para o teste fim-a-fim')
 
 
-class TesteFimAFim(restful.Resource):
+class TesteFimAFim(Resource):
 
     def post(self):
         args = parser.parse_args()

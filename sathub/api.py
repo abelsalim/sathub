@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-from flask.ext import restful
+from flask_restful import Api, Resource
 
 from sathub import app
 
@@ -36,7 +36,7 @@ from sathub.resources.bloquearsat import BloquearSAT
 from sathub.resources.desbloquearsat import DesbloquearSAT
 from sathub.resources.trocarcodigodeativacao import TrocarCodigoDeAtivacao
 
-api = restful.Api(app)
+api = Api(app)
 
 api.add_resource(ComunicarCertificadoICPBRASIL, '/hub/v1/comunicarcertificadoicpbrasil')
 api.add_resource(EnviarDadosVenda, '/hub/v1/enviardadosvenda')

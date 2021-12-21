@@ -19,7 +19,7 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -36,7 +36,7 @@ parser.add_argument('dados_venda',
         help=u'XML contendo os dados do CF-e de venda')
 
 
-class EnviarDadosVenda(restful.Resource):
+class EnviarDadosVenda(Resource):
 
     def post(self):
         args = parser.parse_args()

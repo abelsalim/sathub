@@ -20,7 +20,7 @@
 import logging
 
 from flask import abort
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -37,7 +37,7 @@ parser.add_argument('numero_sessao',
         help=u'Número da sessão a ser consultada')
 
 
-class ConsultarNumeroSessao(restful.Resource):
+class ConsultarNumeroSessao(Resource):
 
     def post(self):
         args = parser.parse_args()

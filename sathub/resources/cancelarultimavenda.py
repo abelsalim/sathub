@@ -19,7 +19,7 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -41,7 +41,7 @@ parser.add_argument('dados_cancelamento',
         help=u'XML contendo os dados do CF-e de cancelamento')
 
 
-class CancelarUltimaVenda(restful.Resource):
+class CancelarUltimaVenda(Resource):
 
     def post(self):
         args = parser.parse_args()

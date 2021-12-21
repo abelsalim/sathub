@@ -37,7 +37,7 @@
 import logging
 
 from flask import abort
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -75,7 +75,7 @@ parser.add_argument('novo_codigo_confirmacao',
         help=u'Confirmação do novo código de ativação')
 
 
-class TrocarCodigoDeAtivacao(restful.Resource):
+class TrocarCodigoDeAtivacao(Resource):
 
     def post(self):
         args = parser.parse_args()

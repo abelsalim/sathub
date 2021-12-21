@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-from flask.ext.restful import reqparse
+from flask_restful import reqparse
 
 from .comum.util import NUM_CAIXA_MIN
 from .comum.util import NUM_CAIXA_MAX

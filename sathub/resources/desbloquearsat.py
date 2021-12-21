@@ -19,7 +19,7 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -31,7 +31,7 @@ logger = logging.getLogger('sathub.resource')
 parser = request_parser()
 
 
-class DesbloquearSAT(restful.Resource):
+class DesbloquearSAT(Resource):
 
     def post(self):
         args = parser.parse_args()

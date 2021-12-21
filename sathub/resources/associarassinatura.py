@@ -19,7 +19,7 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -41,7 +41,7 @@ parser.add_argument('assinatura_ac',
         help=u'Assinatura da sequencia pela AC codificada em base64')
 
 
-class AssociarAssinatura(restful.Resource):
+class AssociarAssinatura(Resource):
 
     def post(self):
         args = parser.parse_args()

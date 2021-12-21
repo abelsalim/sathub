@@ -28,8 +28,6 @@ from logging.config import dictConfig
 
 from cerberus import Validator
 
-from unidecode import unidecode
-
 import satcomum.constantes
 
 
@@ -254,21 +252,21 @@ def _configure_logging(config_path=None):
 
 
 def _verbose(message, *args):
-    as_ascii = lambda s: unidecode(s) if isinstance(s, unicode) else s
+    # as_ascii = lambda s: unidecode(s) if isinstance(s, unicode) else s
 
     msg = message
     if args:
         msg = message.format(*args)
 
     if sys.stdout.isatty():
-        sys.stdout.write('{}\n'.format(as_ascii(msg)))
+        sys.stdout.write(f'{msg}\n')
         sys.stdout.flush()
     else:
         # requer "WSGIRestrictStdout Off"
         # https://code.google.com/p/modwsgi/wiki/DebuggingTechniques
         # https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIRestrictStdout
         if msg:
-            print('SATHub: {}'.format(as_ascii(msg)), file=sys.stdout)
+            print(f'SATHub: {msg}',file=sys.stdout)
 
 
 _configure_logging(config_path=os.environ.get('SATHUB_LOG_CONFIG_PATH'))
