@@ -70,7 +70,7 @@ class RespostaFiscal(Resource):
             )
         else:
             fvfpe = instanciar_funcoes_vfpe(numero_caixa)
-        retorno = fvfpe.resposta_fiscal(self, id_fila, chave_acesso, nsu, numero_aprovacao,
+        retorno = fvfpe.resposta_fiscal(id_fila, chave_acesso, nsu, numero_aprovacao,
                         bandeira, adquirente, cnpj, impressao_fiscal,
                         numero_documento)
 
