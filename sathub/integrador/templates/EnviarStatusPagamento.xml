@@ -1,0 +1,75 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="VFP-e">
+    <Metodo Nome="EnviarStatusPagamento">
+      <Construtor>
+        <Parametros>
+          <Parametro>
+            <Nome>chaveAcessoValidador</Nome>
+            <!--String-->
+            <Valor>{{ consulta.chave_acesso_validador }}</Valor>
+          </Parametro>
+        </Parametros>
+      </Construtor>
+      <Parametros>
+        <Parametro>
+          <Nome>CodigoAutorizacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_autorizacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>Bin</Nome>
+          <!--string-->
+          <Valor>{{ consulta.bin }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>DonoCartao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.dono_cartao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>DataExpiracao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.data_expiracao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>InstituicaoFinanceira</Nome>
+          <!--string-->
+          <Valor>{{ consulta.instituicao_financeira }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>Parcelas</Nome>
+          <!--string-->
+          <Valor>{{ consulta.parcelas }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>CodigoPagamento</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_pagamento }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>ValorPagamento</Nome>
+          <!--string-->
+          <Valor>{{ consulta.valor_pagamento }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>IdFila</Nome>
+          <!--string-->
+          <Valor>{{ consulta.id_fila }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>Tipo</Nome>
+          <!--string-->
+          <Valor>{{ consulta.tipo }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>UltimosQuatroDigitos</Nome>
+          <!--string-->
+          <Valor>{{ consulta.ultimos_quatro_digitos }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

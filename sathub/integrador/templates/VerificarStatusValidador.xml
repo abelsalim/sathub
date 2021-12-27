@@ -1,0 +1,30 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="VFP-e">
+    <Metodo Nome="VerificarStatusValidador">
+      <Construtor>
+        <Parametros>
+          <Parametro>
+            <Nome>chaveAcessoValidador</Nome>
+            <!--String-->
+            <Valor>{{ consulta.chave_acesso_validador }}</Valor>
+          </Parametro>
+        </Parametros>
+      </Construtor>
+      <Parametros>
+        <Parametro>
+          <Nome>idFila</Nome>
+          <!--int-->
+          <Valor>{{ consulta.id_fila }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>cnpj</Nome>
+          <!--string-->
+          <Valor>{{ consulta.cnpj }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

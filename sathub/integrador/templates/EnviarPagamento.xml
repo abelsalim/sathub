@@ -1,0 +1,95 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="VFP-e">
+    <Metodo Nome="EnviarPagamento">
+      <Construtor>
+        <Parametros>
+          <Parametro>
+            <Nome>chaveAcessoValidador</Nome>
+            <!--String-->
+            <Valor>{{ consulta.chave_acesso_validador }}</Valor>
+          </Parametro>
+        </Parametros>
+      </Construtor>
+      <Parametros>
+        <Parametro>
+          <Nome>Id</Nome>
+          <!--int-->
+          <Valor>{{ consulta.id }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>ChaveRequisicao</Nome>
+          <!--Guid-->
+          <Valor>{{ consulta.chave_requisicao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>Estabelecimento</Nome>
+          <!--int-->
+          <Valor>{{ consulta.estabecimento }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>SerialPos</Nome>
+          <!--string-->
+          <Valor>{{ consulta.serial_pos }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>Cnpj</Nome>
+          <!--string-->
+          <Valor>{{ consulta.cpnj }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>IcmsBase</Nome>
+          <!--decimal-->
+          <Valor>{{ consulta.icms_base }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>ValorTotalVenda</Nome>
+          <!--decimal-->
+          <Valor>{{ consulta.vr_total_venda }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>IdFilaValidador</Nome>
+          <!--int-->
+          <Valor>{{ consulta.id_fila_validador }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>TipoMaquina</Nome>
+          <!--string-->
+          <Valor>{{ consulta.tipo_maquina }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>HabilitarMultiplosPagamentos</Nome>
+          <!--bool-->
+          <Valor>{{ consulta.h_multiplos_pagamentos }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>HabilitarControleAntiFraude</Nome>
+          <!--bool-->
+          <Valor>{{ consulta.h_anti_fraude }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>CodigoMoeda</Nome>
+          <!--string-->
+          <Valor>{{ consulta.cod_moeda }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>EnderecoIP</Nome>
+          <!--string-->
+          <Valor>{{ consulta.endereco_ip }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>OrigemPagamento</Nome>
+          <!--string-->
+          <Valor>{{ consulta.origem_pagemento }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>EmitirCupomNFCE</Nome>
+          <!--bool-->
+          <Valor>{{ consulta.cupom_nfce }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>
