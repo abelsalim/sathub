@@ -93,6 +93,7 @@ DEFAULT_CONFIG = {
         'codigo_ativacao': '12345678',
         'caminho_biblioteca': '/opt/fabricante/libsat.so',
         'convencao_chamada': satcomum.constantes.STANDARD_C,
+        'caminho_integrador':'/opt/integrador/'
     }
 
 
@@ -146,6 +147,9 @@ class Configuracoes(object):
                         'type': 'string',
                         'minlength': 1,
                         'maxlength': 100},
+                'caminho_biblioteca': {
+                        'type': 'string',
+                        'required': True},
             }, purge_unknown=True)
 
         self._origem = origem or os.path.join(PROJECT_ROOT, 'config-sathub.json')
@@ -219,6 +223,9 @@ class Configuracoes(object):
                 return nome
         return u'(convencao desconhecida: {!r})'.format(self.convencao_chamada)
 
+    @property
+    def caminho_integrador(self):
+        return self._confdata['caminho_integrador']
 
     def descrever(self):
         """Descreve as configurações na saída padrão ou no terminal, se

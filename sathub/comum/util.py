@@ -25,6 +25,7 @@ import sys
 from satcfe import BibliotecaSAT
 from satcfe import ClienteSATLocal
 from satcfe.base import FuncoesSAT
+from ..integrador.base import FuncoesVFPE
 
 from .config import PROJECT_ROOT
 from .config import conf
@@ -184,6 +185,14 @@ def instanciar_funcoes_sat(numero_caixa):
             numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return funcoes_sat
 
+@memoize
+def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.caminho_integrador):
+    funcoes_vfpe = FuncoesVFPE(
+        caminho,
+        chave_acesso_validador=chave_acesso_validador,
+        numerador_sessao=instanciar_numerador_sessao(numero_caixa)
+    )
+    return funcoes_vfpe
 
 @memoize
 def instanciar_cliente_local(numero_caixa):

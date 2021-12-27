@@ -20,8 +20,8 @@
 import base64
 import os
 
-__version__ = '0.3'
-
+__version__ = '0.4'
+from .integrador import *
 from sathub.comum.config import conf
 conf.descrever()
 
