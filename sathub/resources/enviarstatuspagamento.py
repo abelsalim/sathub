@@ -19,7 +19,7 @@
 
 import logging
 
-from flask_restful import Resource
+import flask_restful as restful
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
@@ -36,7 +36,7 @@ parser.add_argument('dados_venda',
         help=u'XML contendo os dados do CF-e de venda')
 
 
-class EnviarStatusPagamento(Resource):
+class EnviarStatusPagamento(restful.Resource):
 
     def post(self):
         args = parser.parse_args()
@@ -50,7 +50,7 @@ class EnviarStatusPagamento(Resource):
         parcelas = args['parcelas']
         codigo_pagamento = args['codigo_pagamento']
         valor_pagamento = args['valor_pagamento']
-        # id_fila = args['id_fila']
+        id_fila = args['id_fila']
         tipo = args['tipo']
         ultimos_quatro_digitos = args['ultimos_quatro_digitos']
 
@@ -58,7 +58,7 @@ class EnviarStatusPagamento(Resource):
         retorno = fsat.enviar_pagamento(
             codigo_autorizacao, bin, dono_cartao,
             data_expiracao, instituicao_financeira, parcelas,
-            codigo_pagamento, valor_pagamento,
+            codigo_pagamento, valor_pagamento, id_fila,
             tipo, ultimos_quatro_digitos
         )
 

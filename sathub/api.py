@@ -37,6 +37,7 @@ from sathub.resources.desbloquearsat import DesbloquearSAT
 from sathub.resources.trocarcodigodeativacao import TrocarCodigoDeAtivacao
 from sathub.resources.verificarstatusvalidador import VerificarStatusValidador
 from sathub.resources.enviarpagamento import EnviarPagamento
+from sathub.resources.respostafiscal import RespostaFiscal
 
 
 api = Api(app)
@@ -57,3 +58,4 @@ api.add_resource(DesbloquearSAT, '/hub/v1/desbloquearsat')
 api.add_resource(TrocarCodigoDeAtivacao, '/hub/v1/trocarcodigodeativacao')
 api.add_resource(VerificarStatusValidador, '/hub/v1/verificarstatusvalidador')
 api.add_resource(EnviarPagamento, '/hub/v1/enviarpagamento')
+api.add_resource(RespostaFiscal, '/hub/v1/respostafiscal')
