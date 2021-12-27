@@ -6,7 +6,7 @@ Projeto SATHub
     :target: https://pypi.python.org/pypi/sathub/
     :alt: Development status
 
-.. image:: https://img.shields.io/badge/python%20version-2.7-blue.svg
+.. image:: https://img.shields.io/badge/python%20version-3.7-blue.svg
     :target: https://pypi.python.org/pypi/sathub/
     :alt: Supported Python versions
 
