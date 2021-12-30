@@ -72,11 +72,11 @@ class MonitorIntegrador(PatternMatchingEventHandler):
                 self.observer.resposta += '|' + parsed.get('Integrador', {}).get('Identificador', {}).get('Valor')
             self.observer.numero_identificador = parsed.get('Integrador', {}).get('Identificador', {}).get('Valor')
 
-    def on_modified(self, event):
-        self.process(event)
+    def on_modified(self, event,timeout=3):
+        self.process(event,timeout=timeout)
 
-    def on_created(self, event):
-        self.process(event)
+    def on_created(self, event,timeout=3):
+        self.process(event,timeout=timeout)
 
 
 # class _Prototype(object):
