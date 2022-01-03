@@ -31,6 +31,7 @@ import xmltodict
 from .xml import render_xml, sanitize_response
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+from time import sleep
 
 
 class MonitorIntegrador(PatternMatchingEventHandler):
@@ -60,6 +61,7 @@ class MonitorIntegrador(PatternMatchingEventHandler):
 
         :return:
         """
+        sleep(2)
         with open(event.src_path, 'r') as xml_source:
             xml_string = xml_source.read()
             parsed = xmltodict.parse(xml_string)
