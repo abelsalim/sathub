@@ -110,6 +110,6 @@ def extrairlogs(form):
         resultado.conteudo_log = unidecode(resultado.resposta.conteudo())
     return resultado
 
-def atualizarsoftware(form):
+def atualizarsoftwaresat(form):
     return _executar('AtualizarSoftwareSAT',
             'atualizar_software_sat')

@@ -17,31 +17,97 @@
 # limitations under the License.
 #
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms import PasswordField
 from wtforms import validators
+from wtforms.fields import SelectField
 
 
 LOCALES = ['pt_BR', 'pt']
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
 
     username = StringField(u'Nome de Usuário',
-            validators=[
-                    validators.DataRequired(),
-                    validators.length(min=2, max=20),])
+                           validators=[
+                               validators.DataRequired(),
+                               validators.length(min=2, max=20), ])
 
     password = PasswordField('Senha',
-            validators=[
-                    validators.DataRequired(),
-                    validators.length(min=6, max=20),])
+                             validators=[
+                                 validators.DataRequired(),
+                                 validators.length(min=6, max=20), ])
 
     class Meta:
         locales = LOCALES
 
 
-class EmptyForm(Form):
+class EmptyForm(FlaskForm):
     class Meta:
         locales = LOCALES
+
+
+class ConfigurarInterfaceDeRedeFrom(FlaskForm):
+
+    tipoInter = SelectField(
+        choices=(
+            ('ETHE', 'ETHE'),
+            # ('WIFI', 'WIFI')
+        ),
+        label='Tipo de interface',
+        render_kw={'class': 'form-control', 'style': 'font-size:150%'}
+    )
+    # SSID = StringField('Nome da rede (SSID)')
+    # seg = SelectField(
+    #     choices=(
+    #         ('NONE', 'NONE'),
+    #         ('WEP', 'WEP'),
+    #         ('WAP', 'WAP'),
+    #         ('WPA-PERSONAL', 'WPA-PERSONAL'),
+    #         ('WPA-ENTERPRISE', 'WPA-ENTERPRISE'),
+    #     ),
+    #     label='Seguranaça'
+    # )
+    # codigo = PasswordField(
+    #     'Frase ou chave de acesso à rede sem fio.',
+    #     validators=[
+    #         validators.DataRequired(),
+    #         validators.length(min=6, max=64), ]
+    # )
+
+    tipoLan = SelectField(
+        choices=(
+            ('IPFIX', 'IP FIXO'),
+            ('DHCP', 'DHCP (Automático)')
+        ),
+        label='Tipo de conexão',
+        render_kw={'class': 'form-control', 'style': 'font-size:150%'}
+    )
+    lanIP = StringField(
+        'Endereço IP',
+        validators=[
+            validators.DataRequired(),
+            validators.length(max=15)
+        ],				
+        render_kw={'class': 'form-control','value':'000.000.000.000', 'style': 'font-size:150%'}
+    )
+    lanMask = StringField('Máscara',	validators=[
+        validators.DataRequired(),
+        validators.length(max=15)
+    ],
+        render_kw={'class': 'form-control','value':'000.000.000.000', 'style': 'font-size:150%'}
+    )
+    lanGW = StringField('Gateway',	validators=[
+        validators.DataRequired(),
+        validators.length(max=15)
+    ],
+        render_kw={'class': 'form-control','value':'000.000.000.000','style': 'font-size:150%'})
+    lanDNS1 = StringField('DNS1',	validators=[
+        validators.DataRequired(),
+        validators.length(max=15)
+    ], render_kw={'class': 'form-control','value':'000.000.000.000','style': 'font-size:150%'})
+    lanDNS2 = StringField('DNS2',	validators=[
+        validators.DataRequired(),
+        validators.length(max=15)
+    ], render_kw={'class': 'form-control','value':'000.000.000.000','style': 'font-size:150%'})

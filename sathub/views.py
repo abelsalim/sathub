@@ -42,7 +42,8 @@ from . import app
 from . import executor
 from . import conf as sathubconf
 from .forms import EmptyForm
-from .forms import LoginForm
+from .forms import LoginForm, ConfigurarInterfaceDeRedeFrom
+from .comum.util import instanciar_funcoes_sat
 
 
 FUNCOES_ABERTAS = {
@@ -63,6 +64,10 @@ FUNCOES_RESTRITAS = {
                 titulo=u'Extrair Logs',
                 descricao=u'Obtém os registros de log do equipamento SAT.',
                 funcao='ExtrairLogs'),
+        'atualizarsoftwaresat': dict(
+                titulo=u'Atualizar Software',
+                descricao=u'Atualização de software base.',
+                funcao='AtualizarSoftwareSAT'),
     }
 
 
@@ -134,6 +139,34 @@ def login():
             form.username.errors.append('athentication error')
 
     return render_template('login.html', form=form)
+
+@app.route('/configurarinterfacederede',methods=['GET','POST'])
+def configurar_interface_de_rede():
+    form = ConfigurarInterfaceDeRedeFrom(request.form)
+    if request.method == 'POST' and form.validate():
+        lanIP =  f'<lanIP>{form.lanIP.data}</lanIP>' if form.lanIP.data != '000.000.000.000' else ''
+        lanMask = f'<lanMask>{form.lanMask.data}</lanMask>' if form.lanIP.data != '000.000.000.000' else ''
+        lanGW = f'<lanGW>{form.lanGW.data}</lanGW>' if form.lanIP.data != '000.000.000.000' else ''
+        lanDNS1 = f'<lanDNS1>{form.lanDNS1.data}</lanDNS1>' if form.lanIP.data != '000.000.000.000' else ''
+        lanDNS2 = f'<lanDNS2>{form.lanDNS2.data}</lanDNS2>' if form.lanIP.data != '000.000.000.000' else ''
+        dados = f"<config>\
+                    <tipoInter>{form.tipoInter.data}</tipoInter>\
+                    <tipoLan>{form.tipoLan.data}</tipoLan>\
+                    {lanIP}\
+                    {lanMask}\
+                    {lanGW}\
+                    {lanDNS1}\
+                    {lanDNS2}\
+                    <proxy>0</proxy>\
+                </config>"
+        numero_caixa = 1
+        configuracao = dados
+
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.configurar_interface_de_rede(configuracao)
+        flash(f'{retorno}', 'info')
+        return redirect(url_for('index'))
+    return render_template('configurarinterfacederede.html', form=form)
 
 
 @app.route('/logout')
