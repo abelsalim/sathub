@@ -125,6 +125,7 @@ class NumeradorSessaoPorCaixa(object):
 
         self._arquivo_json = os.path.join(PROJECT_ROOT,
                 'sessoes-cx-{}.json'.format(self._numero_caixa))
+        self._carregar_memoria()
 
 
     def __call__(self, *args, **kwargs):
