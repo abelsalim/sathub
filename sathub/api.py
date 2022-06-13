@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+from importlib import resources
 from flask_restful import Api, Resource
 
 from sathub import app
@@ -38,6 +39,7 @@ from sathub.resources.trocarcodigodeativacao import TrocarCodigoDeAtivacao
 from sathub.resources.verificarstatusvalidador import VerificarStatusValidador
 from sathub.resources.enviarpagamento import EnviarPagamento
 from sathub.resources.respostafiscal import RespostaFiscal
+from sathub.resources.imprimirvenda import ImprimirVenda
 
 
 api = Api(app)
@@ -59,3 +61,4 @@ api.add_resource(TrocarCodigoDeAtivacao, '/hub/v1/trocarcodigodeativacao')
 api.add_resource(VerificarStatusValidador, '/hub/v1/verificarstatusvalidador')
 api.add_resource(EnviarPagamento, '/hub/v1/enviarpagamento')
 api.add_resource(RespostaFiscal, '/hub/v1/respostafiscal')
+api.add_resource(ImprimirVenda,'/hub/v1/imprimirvenda')

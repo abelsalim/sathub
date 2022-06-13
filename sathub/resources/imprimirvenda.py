@@ -19,26 +19,23 @@
 
 import logging
 
-from flask.ext import restful
+from flask_restful import Resource
 from satextrato.venda import ExtratoCFeVenda
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_impressora
 from ..custom import request_parser
 import base64
-import StringIO
+from io import StringIO
 
-from satextrato.config import conf
-
+from satextrato import config as conf
 conf.code128_quebrar = True
-conf.nota_rodape.esquerda = 'https://kmee.com.br'
-conf.nota_rodape.direita = 'KMEE INFORMATICA LTDA'
-conf.avancar_linhas = 3
-conf.colunas.condensado = 56
-conf.colunas.expandido = 23
-conf.colunas.normal = 47
-conf.exibir_nome_consumidor = True
-
+conf.Rodape.esquerda = 'https://www.zenirmoveis.com.br'
+conf.Rodape.direita = 'T.I Grupo Zenir'
+conf.Cupom.avancar_linhas = 3
+conf.Cupom.exibir_nome_consumidor = True
+conf.Cupom.itens_modo_condensado = True
+conf.Cupom.resumido = True
 logger = logging.getLogger('sathub.resource')
 
 parser = request_parser()
@@ -52,7 +49,7 @@ parser.add_argument('conexao', type=str, required=True)
 parser.add_argument('site_sefaz', type=str, required=True)
 
 
-class ImprimirVenda(restful.Resource):
+class ImprimirVenda(Resource):
 
     def post(self):
         args = parser.parse_args()
@@ -60,11 +57,8 @@ class ImprimirVenda(restful.Resource):
         dados_venda = args['dados_venda']
         modelo = args['modelo']
         conexao = args['conexao']
-        site_sefaz = args['site_sefaz']
-
+        resumido = False
         impressora = instanciar_impressora('file', modelo, conexao)
-
-        xml = StringIO.StringIO(base64.b64decode(dados_venda))
-
-        impressao = ExtratoCFeVenda(xml, impressora, site_sefaz)
+        xml = StringIO(dados_venda)
+        impressao = ExtratoCFeVenda(xml, impressora, resumido)
         impressao.imprimir()

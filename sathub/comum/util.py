@@ -174,7 +174,7 @@ def memoize(fn):
 
 
 @memoize
-def instanciar_numerador_sessao(numero_caixa):
+def instanciar_numerador_sessao(numero_caixa=1):
     return NumeradorSessaoPorCaixa(numero_caixa=numero_caixa)
 
 
@@ -216,3 +216,30 @@ def hexdump(data):
     hexpanel[-1] = hexpanel[-1] + (chr(32) * (47 - len(hexpanel[-1])))
     chrpanel[-1] = chrpanel[-1] + (chr(32) * (16 - len(chrpanel[-1])))
     return '\n'.join('%s  %s' % (h, c) for h, c in zip(hexpanel, chrpanel))
+
+
+@memoize
+def instanciar_impressora(tipo_conexao, modelo, string_conexao):
+
+    # TODO importar a impressora correta do tipo correto
+    if tipo_conexao == 'file':
+        from escpos import FileConnection as Connection
+    elif tipo_conexao == 'serial':
+        from escpos.serial import SerialConnection as Connection
+    elif tipo_conexao == 'rede':
+        from escpos.network import NetworkConnection as Connection
+    elif tipo_conexao == 'usb':
+        raise NotImplementedError
+
+    if modelo == 'elgini9':
+        from escpos import FileConnection as Connection
+        from escpos.impl.elgin import ElginI9 as Printer
+        string_conexao= '/dev/usb/lp1'
+       
+    else:
+        from escpos.impl.unknown import CB55C as Printer
+
+    conn = Connection(string_conexao)
+    impressora = Printer(conn)
+    impressora.init()
+    return impressora
