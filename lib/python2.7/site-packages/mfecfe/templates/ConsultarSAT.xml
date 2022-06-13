@@ -1,0 +1,16 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="ConsultarSAT">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

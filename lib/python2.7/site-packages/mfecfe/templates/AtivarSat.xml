@@ -1,0 +1,36 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="AtivarSAT">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>subComando</Nome>
+          <!--int-->
+          <Valor>{{ consulta.tipo_certificado }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>cnpj</Nome>
+          <!--string-->
+          <Valor>{{ consulta.cnpj }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>cUF</Nome>
+          <!--int-->
+          <Valor>{{ consulta.codigo_uf }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

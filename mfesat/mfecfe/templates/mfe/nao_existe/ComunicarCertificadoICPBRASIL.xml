@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="ComunicarCertificadoICPBRASIL">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>certificado</Nome>
+          <!--string-->
+          <Valor>{{ consulta.certificado }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

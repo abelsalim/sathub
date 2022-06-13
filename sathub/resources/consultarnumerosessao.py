@@ -43,11 +43,7 @@ class ConsultarNumeroSessao(Resource):
         args = parser.parse_args()
 
         numero_caixa = args['numero_caixa']
-        numero_sessao = args['numero_sessao']
-
-        abort(501) # FIXME: consultar número de sessão não implementado
-        # 501 - Server does not recognise method or lacks ability to fulfill
-        # NOTE: https://github.com/base4sistemas/satcfe
+        numero_sessao = int(args['numero_sessao'])
 
         fsat = instanciar_funcoes_sat(numero_caixa)
         retorno = fsat.consultar_numero_sessao(numero_sessao)

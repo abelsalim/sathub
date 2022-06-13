@@ -1,0 +1,10 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="VFP-e">
+    <Metodo Nome="RecuperarDadosLocaisEnviadosParaValidadorFiscal">
+      <Parametros />
+    </Metodo>
+  </Componente>
+</Integrador>

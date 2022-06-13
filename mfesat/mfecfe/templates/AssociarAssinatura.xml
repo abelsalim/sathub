@@ -1,0 +1,31 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="AssociarAssinatura">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>cnpjValue</Nome>
+          <!--string-->
+          <Valor>{{ consulta.sequencia_cnpj }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>assinaturaCNPJs</Nome>
+          <!--string-->
+          <Valor>{{ consulta.assinatura_ac }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

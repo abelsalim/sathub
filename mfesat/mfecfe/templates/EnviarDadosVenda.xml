@@ -1,0 +1,31 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="EnviarDadosVenda">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>dadosVenda</Nome>
+          <!--string-->
+          <Valor><![CDATA[{{ consulta.cfe_venda }}]]></Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>nrDocumento</Nome>
+          <!--string-->
+          <Valor>{{ consulta.numero_documento }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

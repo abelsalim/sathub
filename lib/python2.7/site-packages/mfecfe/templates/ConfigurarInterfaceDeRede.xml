@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="ConfigurarInterfaceDeRede">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consultar.numero_sessao}}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consultar.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>DadosConfiguracao</Nome>
+          <!--string-->
+          <Valor>{{ consultar.configuracao }}</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

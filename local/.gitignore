@@ -1,0 +1,33 @@
+__pycache__/
+
+/build/
+/dist/
+/sathub.egg-info/
+/*.egg/
+/*.eggs/
+/docs/_build/
+/.cache/
+/bin/
+/include/
+/lib/
+/local/
+/*.idea/
+/share/
+
+config-log.json
+config-sathub.json
+sessoes-cx-*.json
+
+*.pyc
+*.pyo
+*.pyd
+*.sublime-workspace
+*.DS_Store
+*.api
+
+test/mockup/*.so
+test/mockup/*.o
+
+# arquivos gerados pelas bibliotecas SAT
+# Dimep D-SAT
+logsat.txt

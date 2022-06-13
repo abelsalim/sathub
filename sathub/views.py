@@ -36,14 +36,19 @@ from flask_login import current_user
 from flask_login import login_user
 from flask_login import login_required
 from flask_login import logout_user
+from satcfe import BibliotecaSAT
+from satcfe import ClienteSATLocal
+from satcfe.base import FuncoesSAT
+from .comum.config import conf
 
 from . import __version__ as sathub_version
 from . import app
 from . import executor
 from . import conf as sathubconf
-from .forms import EmptyForm
+from .forms import AssociarAssinaturaForm, AtivarSatForm, EmptyForm
 from .forms import LoginForm, ConfigurarInterfaceDeRedeFrom
 from .comum.util import instanciar_funcoes_sat
+from .comum.util import instanciar_numerador_sessao
 
 
 FUNCOES_ABERTAS = {
@@ -125,6 +130,42 @@ def unauthorized():
 def index():
     return render_template('index.html')
 
+@app.route('/associarassinatura',methods=['GET','POST'])
+def associar_assinatura():
+    form = AssociarAssinaturaForm(request.form)
+    if request.method == 'POST' and form.validate():
+        # pcCodAtivacao = form.pcCodAtivacao.data
+        sequencia_cnpj = form.cnpjSoftwareHouse.data + form.cnpjContribuinte.data
+        assinatura_ac = form.lpcAssinaturaCnpjs.data
+        numero_caixa = 1
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        retorno = fsat.associar_assinatura(sequencia_cnpj, assinatura_ac)
+        flash(f'{retorno}', 'info')
+        return redirect(url_for('index'))
+
+    return render_template('associarassinatura.html',form=form)
+
+@app.route('/ativarsat',methods=['GET','POST'])
+def ativar_sat():
+    form = AtivarSatForm(request.form)
+    if request.method == 'POST' and form.validate():
+        tipoCertificado = int(form.tipoCertificado.data)
+        codigo_ativacao = form.codAtivacao.data
+        cnpjContribuinte = form.cnpjContribuinte.data
+        uf = int(form.uf.data)
+        numero_caixa = 1
+        # def instanciar_funcoes_sat():
+        #         breakpoint()
+        #         funcoes_sat = FuncoesSAT(BibliotecaSAT(conf.caminho_biblioteca,
+        #         convencao=conf.convencao_chamada))
+        #         return funcoes_sat
+        fsat = instanciar_funcoes_sat(numero_caixa)
+        # numero_sessao = instanciar_numerador_sessao(numero_caixa)
+        retorno = fsat.ativar_sat(tipo_certificado=tipoCertificado,cnpj=cnpjContribuinte,codigo_uf=uf)
+        flash(f'{retorno}', 'info')
+        return redirect(url_for('index'))
+
+    return render_template('associarassinatura.html',form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,0 +1,31 @@
+<Integrador>
+  <Identificador>
+    <Valor>{{ numero_identificador }}</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="CancelarUltimaVenda">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{{ consulta.numero_sessao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{{ consulta.codigo_ativacao }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>chave</Nome>
+          <!--string-->
+          <Valor>{{ consulta.chave_cfe }}</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>dadosCancelamento</Nome>
+          <!--string-->
+          <Valor><![CDATA[{{ consulta.cfe_canc }}]]></Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

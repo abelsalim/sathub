@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+from cProfile import label
+from random import choices
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms import PasswordField
@@ -46,8 +48,73 @@ class LoginForm(FlaskForm):
 class EmptyForm(FlaskForm):
     class Meta:
         locales = LOCALES
+class AtivarSatForm(FlaskForm):
+    tipoCertificado = SelectField(
+        choices=(
+            (1, 'AC-SAT'),
+            (2, 'ICP-BRASIL')
+        ),
+        label='Tipo de Certificado',
+        render_kw={'class': 'form-control', 'style': 'font-size:100%'}
+    )
+    codAtivacao = StringField(
+        label="Código de ativação",
+        render_kw={'class': 'form-control','style': 'font-size:100%'}        
+    )
+    cnpjContribuinte = StringField(
+        label="CNPJ do contribuinte",
+        render_kw={'class': 'form-control','style': 'font-size:100%'}
+    )
+    uf = SelectField(
+        choices=(
+            (11,"Rondônia-RO"),
+            (12,"Acre-AC"),
+            (13,"Amazonas-AM"),
+            (14,"Roraima-RR"),
+            (15,"Pará-PA"),
+            (16,"Amapá-AP"),
+            (17,"Tocantins-TO"),
+            (21,"Maranhão-MA"),
+            (22,"Piauí-PI"),
+            (23,"Ceará-CE"),
+            (24,"Rio Grande do Norte-RN"),
+            (25,"Paraíba-PB"),
+            (26,"Pernambuco-PE"),
+            (27,"Alagoas-AL"),
+            (28,"Sergipe-SE"),
+            (29,"Bahia-BA"),
+            (31,"Minas Gerais-MG"),
+            (32,"Espírito Santo-ES"),
+            (33,"Rio de Janeiro-RJ"),
+            (35,"São Paulo-SP"),
+            (41,"Paraná-PR"),
+            (42,"Santa Catarina-SC"),
+            (43,"Rio Grande do Sul-RS"),
+            (50,"Mato Grosso do Sul-MS"),
+            (51,"Mato Grosso-MT"),
+            (52,"Goiás-GO"),
+            (53,"Distrito Federal-DF"),
+        ),
+        render_kw={'class': 'form-control','style': 'font-size:100%'}
+    )
+class AssociarAssinaturaForm(FlaskForm):
 
-
+    cnpjContribuinte = StringField(
+        label='CNPJ do contribuinte',
+        render_kw={'class': 'form-control','style': 'font-size:150%'}
+    )
+    cnpjSoftwareHouse = StringField(
+        label='CNPJ da Software House',
+        render_kw={'class': 'form-control','style': 'font-size:150%'}
+    )
+    # pcCodAtivacao = StringField(
+    #     label='Código de ativação',
+    #     render_kw={'class': 'form-control','style': 'font-size:150%'}
+    # )
+    lpcAssinaturaCnpjs = StringField(
+        label='Assinatura do AC',
+        render_kw={'class': 'form-control','style': 'font-size:150%'}
+    )
 class ConfigurarInterfaceDeRedeFrom(FlaskForm):
 
     tipoInter = SelectField(

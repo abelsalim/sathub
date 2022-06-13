@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Integrador>
+  <Identificador>
+    <Valor>{ { numero_identificador } }</Valor>
+  </Identificador>
+  <Componente Nome="MF-e">
+    <Metodo Nome="TrocarCodigoDeAtivacao">
+      <Parametros>
+        <Parametro>
+          <Nome>numeroSessao</Nome>
+          <!--int-->
+          <Valor>{ { consulta.numero_sessao } }</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>codigoDeAtivacao</Nome>
+          <!--string-->
+          <Valor>{ { consulta.codigo_ativacao } }</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>opcao</Nome>
+          <!--int-->
+          <Valor>{ { consulta.opcao } }</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>novoCodigo</Nome>
+          <!--string-->
+          <Valor>{ { consulta.novo_codigo } }</Valor>
+        </Parametro>
+        <Parametro>
+          <Nome>confNovoCodigo</Nome>
+          <!--string-->
+          <Valor>{ { consulta.conf_novo_codigo } }</Valor>
+        </Parametro>
+      </Parametros>
+    </Metodo>
+  </Componente>
+</Integrador>

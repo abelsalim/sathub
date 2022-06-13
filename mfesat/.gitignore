@@ -1,0 +1,15 @@
+__pycache__/
+.cache/
+.idea/
+/docs/
+/build/
+/dist/
+/mfecfe.egg-info/
+/*.egg/
+/*.eggs/
+/docs/_build/
+
+*.pyc
+*.pyo
+*.pyd
+*.sublime-workspace
