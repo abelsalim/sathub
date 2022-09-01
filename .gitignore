@@ -7,7 +7,7 @@ __pycache__/
 /*.eggs/
 /docs/_build/
 /.cache/
-
+env
 config-log.json
 config-sathub.json
 sessoes-cx-*.json
