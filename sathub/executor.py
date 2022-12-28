@@ -75,7 +75,6 @@ class ResultadoFuncao(object):
         return ''
 
 
-
 def _executar(funcao, metodo, *args, **kwargs):
     try:
         cliente = util.instanciar_cliente_local(CAIXA)
@@ -110,6 +109,17 @@ def extrairlogs(form):
         resultado.conteudo_log = unidecode(resultado.resposta.conteudo())
     return resultado
 
+
 def atualizarsoftwaresat(form):
     return _executar('AtualizarSoftwareSAT',
             'atualizar_software_sat')
+
+
+def bloquearsat(form):
+    return _executar('BloquearSAT',
+            'bloquear_sat')
+
+
+def desbloquearsat(form):
+    return _executar('DesbloquearSAT',
+            'desbloquear_sat')
