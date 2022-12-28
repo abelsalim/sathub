@@ -73,6 +73,14 @@ FUNCOES_RESTRITAS = {
                 titulo=u'Atualizar Software',
                 descricao=u'Atualização de software base.',
                 funcao='AtualizarSoftwareSAT'),
+        'bloquearsat': dict(
+                titulo=u'Bloquear SAT',
+                descricao=u'Bloqueio de equipamento.',
+                funcao='BloquearSAT'),
+        'desbloquearsat': dict(
+                titulo=u'Desloquear SAT',
+                descricao=u'Desbloqueio de equipamento.',
+                funcao='DesbloquearSAT'),
     }
 
 
