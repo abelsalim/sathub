@@ -19,10 +19,15 @@
 
 import logging
 
+import json
+
+import xmltodict
+
 from flask_restful import Resource
 
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
+from ..comum.util import instanciar_numerador_sessao as instanciar_numerador
 from ..custom import request_parser
 
 
@@ -38,14 +43,65 @@ parser.add_argument('dados_venda',
 
 class EnviarDadosVenda(Resource):
 
+
+    def pega_lista(self, numero_caixa):
+        with open(f'/opt/sathub/sessoes-cx-{numero_caixa}.json') as file:
+            return json.load(file)
+
+
     def post(self):
-        args = parser.parse_args()
+        
+        while True:
+            args = parser.parse_args()
 
-        numero_caixa = args['numero_caixa']
-        dados_venda = args['dados_venda']
+            numero_caixa = args['numero_caixa']
+            dados_venda = args['dados_venda']
+            
+            # Extraindo pedido do xml
+            xml = xmltodict.parse(dados_venda)
+            pedido = xml['CFe']['infCFe']['infAdic']['infCpl'].split(' ')[1]
 
-        fsat = instanciar_funcoes_sat(numero_caixa)
-        retorno = fsat.enviar_dados_venda(dados_venda)
+            # Resgatando dicionário com a última venda
+            numerador_instanciado = instanciar_numerador(numero_caixa)
+            ultima_venda = numerador_instanciado._ultima_venda
+            
+            # Instanciando objeto sathub
+            fsat = instanciar_funcoes_sat(numero_caixa)
+            
+            # Consultando MFE
+            consultar_sat = fsat.consultar_sat()
+
+            if not consultar_sat:
+                return 'Sem comunicação com o MFE!'
+
+            # Verificando se o último cupom emitido é o mesmo do atual 
+            if ultima_venda:
+                dados_json, pedido_json, cupom_json = [x for x in ultima_venda.values()]
+                if dados_venda == dados_json and pedido == pedido_json:
+                    return f'Documento já emitido pelo {cupom_json} e Minuta {pedido_json}'
+
+            # Envio de cupom
+            retorno = fsat.enviar_dados_venda(dados_venda)
+
+            # Obtendo retorno do cupom (Se foi emitido ou não)
+            if retorno.split("|")[1] == '06000':
+                cupom_emitido = True
+                numero_cupom = f'CF-e nº {int(retorno.split("|")[8][34:40])}'
+
+                # Montando dicionário da venda atual
+                ultima_venda_dict = {
+                    'xml_ultima_venda': dados_venda,
+                    'pedido_ultima_venda': pedido,
+                    'cupom_ultima_venda': numero_cupom
+                    }
+
+                # Enviando dicionário para arquivo
+                numerador_instanciado._escrever_dados_venda_json(ultima_venda_dict)
+
+            elif retorno.split("|")[1] == '06097':
+                continue
+                
+            break
 
         if logger.isEnabledFor(logging.DEBUG):
             logger.debug('Retorno "EnviarDadosVenda" '

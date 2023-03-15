@@ -116,16 +116,25 @@ class NumeradorSessaoPorCaixa(object):
     def __init__(self, tamanho=100, numero_caixa=1):
         super(NumeradorSessaoPorCaixa, self).__init__()
         self._memoria = []
+        self._ultima_venda = {}
         self._tamanho = tamanho
         self._numero_caixa = numero_caixa
 
+        # Certifica se o número do caixa está entre o mínimo e o máximo
         assert NUM_CAIXA_MIN <= self._numero_caixa <= NUM_CAIXA_MAX, \
-                'Numero do caixa fora da faixa (0..999): {}'.format(
-                        self._numero_caixa)
+            f'Numero do caixa fora da faixa (0..999): {self._numero_caixa}'
 
+        # Define arquivo em variável e carrega dados do json de sessões
         self._arquivo_json = os.path.join(PROJECT_ROOT,
-                'sessoes-cx-{}.json'.format(self._numero_caixa))
+                                f'sessoes-cx-{self._numero_caixa}.json')
+        
         self._carregar_memoria()
+        
+        # Define arquivo em variável e carrega dados do json da ultima venda
+        self._ultima_venda_json = os.path.join(PROJECT_ROOT,
+                                f'ultima-venda-cx-{self._numero_caixa}.json')
+        
+        self._recuperar_dados_venda()
 
 
     def __call__(self, *args, **kwargs):
@@ -143,17 +152,38 @@ class NumeradorSessaoPorCaixa(object):
     def _carregar_memoria(self):
         self._memoria[:] = []
         if os.path.exists(self._arquivo_json):
-            with open(self._arquivo_json, 'r') as f:
-                self._memoria = json.load(f)
+            with open(self._arquivo_json) as file:
+                self._memoria = json.load(file)
 
         assert isinstance(self._memoria, list), \
                 "Memoria de numeracao de sessao deve ser um objeto 'list'; "\
-                "obtido {}".format(type(self._memoria))
+                f"obtido {self._memoria}"
+        
+
+    def _recuperar_dados_venda(self):
+        self._ultima_venda = {}
+        if os.path.exists(self._ultima_venda_json):
+            with open(self._ultima_venda_json) as file:
+                try:
+                    self._ultima_venda = json.load(file)
+                except ValueError:
+                    self._ultima_venda = ''
 
 
     def _escrever_memoria(self):
-        with open(self._arquivo_json, 'w') as f:
-            json.dump(self._memoria, f)
+        with open(self._arquivo_json, 'w') as file:
+            json.dump(self._memoria, file)
+
+
+    def _escrever_ultima_venda(self, entrada):
+        if isinstance(entrada, dict):
+            self._ultima_venda = entrada
+
+
+    def _escrever_dados_venda_json(self, entrada):
+        with open(self._ultima_venda_json, 'w') as file:
+            json.dump(entrada, file)
+            self._ultima_venda = entrada
 
 
 def memoize(fn):
