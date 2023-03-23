@@ -63,7 +63,7 @@ class EnviarDadosVenda(Resource):
 
             # Resgatando dicionário com a última venda
             numerador_instanciado = instanciar_numerador(numero_caixa)
-            ultima_venda = numerador_instanciado._ultima_venda
+            ultimas_vendas = numerador_instanciado._ultimas_vendas
             
             # Instanciando objeto sathub
             fsat = instanciar_funcoes_sat(numero_caixa)
@@ -75,17 +75,17 @@ class EnviarDadosVenda(Resource):
                 return 'Sem comunicação com o MFE!'
 
             # Verificando se o último cupom emitido é o mesmo do atual 
-            if ultima_venda:
-                dados_json, pedido_json, cupom_json = [x for x in ultima_venda.values()]
-                if dados_venda == dados_json and pedido == pedido_json:
-                    return f'Documento já emitido pelo {cupom_json} e Minuta {pedido_json}'
+            if ultimas_vendas:
+                for venda in ultimas_vendas:
+                    dados_json, pedido_json, cupom_json = (x for x in venda.values())
+                    if dados_venda == dados_json and pedido == pedido_json:
+                        return f'Documento já emitido pelo {cupom_json} e Minuta {pedido_json}'
 
             # Envio de cupom
             retorno = fsat.enviar_dados_venda(dados_venda)
 
             # Obtendo retorno do cupom (Se foi emitido ou não)
             if retorno.split("|")[1] == '06000':
-                cupom_emitido = True
                 numero_cupom = f'CF-e nº {int(retorno.split("|")[8][34:40])}'
 
                 # Montando dicionário da venda atual
