@@ -116,7 +116,7 @@ class NumeradorSessaoPorCaixa(object):
     def __init__(self, tamanho=100, numero_caixa=1):
         super(NumeradorSessaoPorCaixa, self).__init__()
         self._memoria = []
-        self._ultima_venda = {}
+        self._ultimas_vendas = []
         self._tamanho = tamanho
         self._numero_caixa = numero_caixa
 
@@ -131,7 +131,7 @@ class NumeradorSessaoPorCaixa(object):
         self._carregar_memoria()
         
         # Define arquivo em variável e carrega dados do json da ultima venda
-        self._ultima_venda_json = os.path.join(PROJECT_ROOT,
+        self._ultimas_vendas_json = os.path.join(PROJECT_ROOT,
                                 f'ultima-venda-cx-{self._numero_caixa}.json')
         
         self._recuperar_dados_venda()
@@ -161,29 +161,32 @@ class NumeradorSessaoPorCaixa(object):
         
 
     def _recuperar_dados_venda(self):
-        self._ultima_venda = {}
-        if os.path.exists(self._ultima_venda_json):
-            with open(self._ultima_venda_json) as file:
+        self._ultimas_vendas = []
+        if os.path.exists(self._ultimas_vendas_json):
+            with open(self._ultimas_vendas_json) as file:
                 try:
-                    self._ultima_venda = json.load(file)
+                    self._ultimas_vendas = json.load(file)
                 except ValueError:
-                    self._ultima_venda = ''
-
-
-    def _escrever_memoria(self):
-        with open(self._arquivo_json, 'w') as file:
-            json.dump(self._memoria, file)
-
-
-    def _escrever_ultima_venda(self, entrada):
-        if isinstance(entrada, dict):
-            self._ultima_venda = entrada
+                    pass
+                except AttributeError:
+                    self._ultimas_vendas = []
 
 
     def _escrever_dados_venda_json(self, entrada):
-        with open(self._ultima_venda_json, 'w') as file:
-            json.dump(entrada, file)
-            self._ultima_venda = entrada
+        if os.path.exists(self._ultimas_vendas_json):
+            with open(self._ultimas_vendas_json) as file_r:
+                try:
+                    lista_dict = json.load(file_r)
+                    if len(lista_dict) == 20:
+                        lista_dict.pop(0)
+                except ValueError:
+                    pass
+                except AttributeError:
+                    self._ultimas_vendas = []
+
+        with open(self._ultimas_vendas_json, 'w') as file_w:
+            self._ultimas_vendas.append(entrada)
+            json.dump(self._ultimas_vendas, file_w)
 
 
 def memoize(fn):
