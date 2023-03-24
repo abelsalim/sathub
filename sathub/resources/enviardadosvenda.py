@@ -44,9 +44,41 @@ parser.add_argument('dados_venda',
 class EnviarDadosVenda(Resource):
 
 
-    def pega_lista(self, numero_caixa):
-        with open(f'/opt/sathub/sessoes-cx-{numero_caixa}.json') as file:
-            return json.load(file)
+    def obter_pedido(self, parametro):
+        """
+        Método que retornar o pedido/minuta contido no esqueleto do XML 
+        """
+        xml = xmltodict.parse(parametro)
+        return xml['CFe']['infCFe']['infAdic']['infCpl'].split(' ')[1]
+    
+
+    def venda_existe(self, vendas, dados_venda, pedido_atual):
+        """
+        Método que verifica se o cupom corrente já foi faturado
+        """
+        for venda in vendas:
+            xml, pedido, cupom = (x for x in venda.values())
+            if dados_venda == xml and pedido_atual == pedido:
+                return cupom, pedido
+        return '', ''
+            
+    
+    def monta_dicionario(self, retorno, objeto, dados_venda, pedido_atual):
+        """
+        Monta dicionário para inserir na lista de dicionários (arquivo json) e
+        ta,bém atualiza o atributo de instancia `_ultimas_vendas`
+        """
+        numero_cupom = f'CF-e nº {int(retorno.split("|")[8][34:40])}'
+
+        # Montando dicionário da venda atual
+        ultima_venda_dict = {
+            'xml': dados_venda,
+            'pedido': pedido_atual,
+            'cupom': numero_cupom
+            }
+
+        # Enviando dicionário para arquivo
+        objeto._escrever_dados_venda(ultima_venda_dict)
 
 
     def post(self):
@@ -58,49 +90,37 @@ class EnviarDadosVenda(Resource):
             dados_venda = args['dados_venda']
             
             # Extraindo pedido do xml
-            xml = xmltodict.parse(dados_venda)
-            pedido = xml['CFe']['infCFe']['infAdic']['infCpl'].split(' ')[1]
+            pedido_atual = self.obter_pedido(dados_venda)
 
-            # Resgatando dicionário com a última venda
+            # Resgatando lista de dicionários com as últimas vendas
             numerador_instanciado = instanciar_numerador(numero_caixa)
-            ultimas_vendas = numerador_instanciado._ultimas_vendas
+            vendas = numerador_instanciado._ultimas_vendas
             
             # Instanciando objeto sathub
             fsat = instanciar_funcoes_sat(numero_caixa)
             
             # Consultando MFE
-            consultar_sat = fsat.consultar_sat()
-
-            if not consultar_sat:
+            if not fsat.consultar_sat():
                 return 'Sem comunicação com o MFE!'
 
             # Verificando se o último cupom emitido é o mesmo do atual 
-            if ultimas_vendas:
-                for venda in ultimas_vendas:
-                    dados_json, pedido_json, cupom_json = (x for x in venda.values())
-                    if dados_venda == dados_json and pedido == pedido_json:
-                        return f'Documento já emitido pelo {cupom_json} e Minuta {pedido_json}'
+            cupom, pedido = self.venda_existe(vendas, dados_venda, pedido_atual)
+            if cupom and pedido:
+                return f'Documento já emitido pelo {cupom} e Minuta {pedido}'
 
             # Envio de cupom
             retorno = fsat.enviar_dados_venda(dados_venda)
 
             # Obtendo retorno do cupom (Se foi emitido ou não)
-            if retorno.split("|")[1] == '06000':
-                numero_cupom = f'CF-e nº {int(retorno.split("|")[8][34:40])}'
+            status = retorno.split("|")[1]
+            if status == '06000':
+                self.monta_dicionario(
+                    retorno, numerador_instanciado, dados_venda, pedido_atual
+                )
 
-                # Montando dicionário da venda atual
-                ultima_venda_dict = {
-                    'xml_ultima_venda': dados_venda,
-                    'pedido_ultima_venda': pedido,
-                    'cupom_ultima_venda': numero_cupom
-                    }
-
-                # Enviando dicionário para arquivo
-                numerador_instanciado._escrever_dados_venda_json(ultima_venda_dict)
-
-            elif retorno.split("|")[1] == '06097':
+            elif status == '06097':
                 continue
-                
+
             break
 
         if logger.isEnabledFor(logging.DEBUG):
