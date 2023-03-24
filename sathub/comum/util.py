@@ -172,7 +172,12 @@ class NumeradorSessaoPorCaixa(object):
                     self._ultimas_vendas = []
 
 
-    def _escrever_dados_venda_json(self, entrada):
+    def _escrever_memoria(self):
+        with open(self._arquivo_json, 'w') as file:
+            json.dump(self._memoria, file)
+
+
+    def _escrever_dados_venda(self, entrada):
         if os.path.exists(self._ultimas_vendas_json):
             with open(self._ultimas_vendas_json) as file_r:
                 try:
