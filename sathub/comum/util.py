@@ -65,7 +65,7 @@ def faixa_numeracao(numero_caixa):
     n_min = ((_num_caixa * NUM_POR_FAIXA) + NUM_SESSAO_MIN) - NUM_POR_FAIXA
     n_max = (_num_caixa * NUM_POR_FAIXA) + NUM_SESSAO_MIN
     if _num_caixa > 1:
-       n_min += 1
+        n_min += 1
     return n_min, n_max
 
 
@@ -125,17 +125,18 @@ class NumeradorSessaoPorCaixa(object):
             f'Numero do caixa fora da faixa (0..999): {self._numero_caixa}'
 
         # Define arquivo em variável e carrega dados do json de sessões
-        self._arquivo_json = os.path.join(PROJECT_ROOT,
-                                f'sessoes-cx-{self._numero_caixa}.json')
-        
-        self._carregar_memoria()
-        
-        # Define arquivo em variável e carrega dados do json da ultima venda
-        self._ultimas_vendas_json = os.path.join(PROJECT_ROOT,
-                                f'ultima-venda-cx-{self._numero_caixa}.json')
-        
-        self._recuperar_dados_venda()
+        self._arquivo_json = os.path.join(
+            PROJECT_ROOT,
+            f'sessoes-cx-{self._numero_caixa}.json')
 
+        self._carregar_memoria()
+
+        # Define arquivo em variável e carrega dados do json da ultima venda
+        self._ultimas_vendas_json = os.path.join(
+            PROJECT_ROOT,
+            f'ultima-venda-cx-{self._numero_caixa}.json')
+
+        self._recuperar_dados_venda()
 
     def __call__(self, *args, **kwargs):
         while True:
@@ -143,11 +144,10 @@ class NumeradorSessaoPorCaixa(object):
             if numero not in self._memoria:
                 self._memoria.append(numero)
                 if len(self._memoria) > self._tamanho:
-                    self._memoria.pop(0) # remove o mais antigo
+                    self._memoria.pop(0)
                 break
         self._escrever_memoria()
         return numero
-
 
     def _carregar_memoria(self):
         self._memoria[:] = []
@@ -156,9 +156,8 @@ class NumeradorSessaoPorCaixa(object):
                 self._memoria = json.load(file)
 
         assert isinstance(self._memoria, list), \
-                "Memoria de numeracao de sessao deve ser um objeto 'list'; "\
-                f"obtido {self._memoria}"
-        
+            "Memoria de numeracao de sessao deve ser um objeto 'list'; "\
+            f"obtido {self._memoria}"
 
     def _recuperar_dados_venda(self):
         self._ultimas_vendas = []
@@ -171,11 +170,9 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     self._ultimas_vendas = []
 
-
     def _escrever_memoria(self):
         with open(self._arquivo_json, 'w') as file:
             json.dump(self._memoria, file)
-
 
     def _escrever_dados_venda(self, entrada):
         if os.path.exists(self._ultimas_vendas_json):
@@ -218,14 +215,19 @@ def instanciar_numerador_sessao(numero_caixa=1):
 
 @memoize
 def instanciar_funcoes_sat(numero_caixa):
-    funcoes_sat = FuncoesSAT(BibliotecaSAT(conf.caminho_biblioteca,
-                    convencao=conf.convencao_chamada),
-            codigo_ativacao=conf.codigo_ativacao,
-            numerador_sessao=instanciar_numerador_sessao(numero_caixa))
+    funcoes_sat = FuncoesSAT(BibliotecaSAT(
+        conf.caminho_biblioteca,
+        convencao=conf.convencao_chamada),
+        codigo_ativacao=conf.codigo_ativacao,
+        numerador_sessao=instanciar_numerador_sessao(numero_caixa)
+    )
     return funcoes_sat
 
+
 @memoize
-def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.caminho_integrador):
+def instanciar_funcoes_vfpe(numero_caixa,
+                            chave_acesso_validador,
+                            caminho=conf.caminho_integrador):
     funcoes_vfpe = FuncoesVFPE(
         caminho,
         chave_acesso_validador=chave_acesso_validador,
@@ -233,12 +235,14 @@ def instanciar_funcoes_vfpe(numero_caixa, chave_acesso_validador, caminho=conf.c
     )
     return funcoes_vfpe
 
+
 @memoize
 def instanciar_cliente_local(numero_caixa):
-    cliente = ClienteSATLocal(BibliotecaSAT(conf.caminho_biblioteca,
-                    convencao=conf.convencao_chamada),
-            codigo_ativacao=conf.codigo_ativacao,
-            numerador_sessao=instanciar_numerador_sessao(numero_caixa))
+    cliente = ClienteSATLocal(BibliotecaSAT(
+        conf.caminho_biblioteca,
+        convencao=conf.convencao_chamada),
+        codigo_ativacao=conf.codigo_ativacao,
+        numerador_sessao=instanciar_numerador_sessao(numero_caixa))
     return cliente
 
 
@@ -272,8 +276,8 @@ def instanciar_impressora(tipo_conexao, modelo, string_conexao):
     if modelo == 'elgini9':
         from escpos import FileConnection as Connection
         from escpos.impl.elgin import ElginI9 as Printer
-        string_conexao= '/dev/usb/lp1'
-       
+        string_conexao = '/dev/usb/lp1'
+
     else:
         from escpos.impl.unknown import CB55C as Printer
 
