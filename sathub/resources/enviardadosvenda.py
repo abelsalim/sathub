@@ -54,11 +54,12 @@ class EnviarDadosVenda(Resource):
         """
         Método que verifica se o cupom corrente já foi faturado
         """
+        lista = ['pedido', 'cupom']
         for venda in vendas:
-            xml, pedido, cupom = (x for x in venda.values())
-            if dados_venda == xml and pedido_atual == pedido:
-                return cupom, pedido
-        return '', ''
+            xml, retorno_dict = (v for k, v in venda.items() if k not in lista)
+            if dados_venda == xml:
+                return retorno_dict
+        return ''
 
     def monta_dicionario(self, retorno, objeto, dados_venda, pedido_atual):
         """
@@ -71,7 +72,8 @@ class EnviarDadosVenda(Resource):
         ultima_venda_dict = {
             'xml': dados_venda,
             'pedido': pedido_atual,
-            'cupom': numero_cupom
+            'cupom': numero_cupom,
+            'retorno': retorno
             }
 
         # Enviando dicionário para arquivo
@@ -100,11 +102,9 @@ class EnviarDadosVenda(Resource):
                 return 'Sem comunicação com o MFE!'
 
             # Verificando se o último cupom emitido é o mesmo do atual
-            cupom, pedido = self.venda_existe(vendas,
-                                              dados_venda,
-                                              pedido_atual)
-            if cupom and pedido:
-                return f'Documento já emitido pelo {cupom} e Minuta {pedido}'
+            retorno_dict = self.venda_existe(vendas, dados_venda, pedido_atual)
+            if retorno_dict:
+                return dict(funcao='EnviarDadosVenda', retorno=retorno_dict)
 
             # Envio de cupom
             retorno = fsat.enviar_dados_venda(dados_venda)
