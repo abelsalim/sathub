@@ -200,7 +200,7 @@ class NumeradorSessaoPorCaixa(object):
             with open(self._ultimos_erros_json) as file_r:
                 try:
                     lista_dict = json.load(file_r)
-                    if len(lista_dict) == 20:
+                    if len(lista_dict) == 1000:
                         lista_dict.pop(0)
                     lista_erros = lista_dict
                 except ValueError:
