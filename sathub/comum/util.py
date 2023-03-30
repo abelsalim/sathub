@@ -125,18 +125,19 @@ class NumeradorSessaoPorCaixa(object):
             f'Numero do caixa fora da faixa (0..999): {self._numero_caixa}'
 
         # Define arquivo em variável e carrega dados do json de sessões
-        self._arquivo_json = os.path.join(
-            PROJECT_ROOT,
+        self._arquivo_json = self._file_exists(
             f'sessoes-cx-{self._numero_caixa}.json')
 
         self._carregar_memoria()
 
         # Define arquivo em variável e carrega dados do json da ultima venda
-        self._ultimas_vendas_json = os.path.join(
-            PROJECT_ROOT,
+        self._ultimas_vendas_json = self._file_exists(
             f'ultima-venda-cx-{self._numero_caixa}.json')
 
         self._recuperar_dados_venda()
+
+        # Define arquivo em variável e carrega dados do json dos últimos erros
+        self._ultimos_erros_json = self._file_exists('ultimos-erros.json')
 
     def __call__(self, *args, **kwargs):
         while True:
@@ -148,6 +149,9 @@ class NumeradorSessaoPorCaixa(object):
                 break
         self._escrever_memoria()
         return numero
+
+    def _file_exists(self, file):
+        return os.path.join(PROJECT_ROOT, file)
 
     def _carregar_memoria(self):
         self._memoria[:] = []
@@ -188,7 +192,26 @@ class NumeradorSessaoPorCaixa(object):
 
         with open(self._ultimas_vendas_json, 'w') as file_w:
             self._ultimas_vendas.append(entrada)
-            json.dump(self._ultimas_vendas, file_w)
+            json.dump(self._ultimas_vendas, file_w, indent=4)
+
+    def _escrever_dados_erro(self, entrada):
+        lista_erros = []
+        if os.path.exists(self._ultimos_erros_json):
+            with open(self._ultimos_erros_json) as file_r:
+                try:
+                    lista_dict = json.load(file_r)
+                    if len(lista_dict) == 20:
+                        lista_dict.pop(0)
+                    lista_erros = lista_dict
+                except ValueError:
+                    pass
+                except AttributeError:
+                    lista_erros = []
+
+        with open(self._ultimos_erros_json, 'w') as file_w:
+            lista_erros.append(entrada)
+            json.dump(lista_erros, file_w, indent=4)
+            del(lista_erros)
 
 
 def memoize(fn):

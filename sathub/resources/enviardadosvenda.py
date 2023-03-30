@@ -61,23 +61,36 @@ class EnviarDadosVenda(Resource):
                 return retorno_dict
         return ''
 
-    def monta_dicionario(self, retorno, objeto, dados_venda, pedido_atual):
+    def monta_dicionario(self, tipo, retorno, objeto, dados, pedido):
         """
         Monta dicionário para inserir na lista de dicionários (arquivo json) e
         também atualiza o atributo de instancia `_ultimas_vendas`
         """
-        numero_cupom = f'CF-e nº {int(retorno.split("|")[8][34:40])}'
+        list_retorno = retorno.split('|')
 
-        # Montando dicionário da venda atual
-        ultima_venda_dict = {
-            'xml': dados_venda,
-            'pedido': pedido_atual,
-            'cupom': numero_cupom,
-            'retorno': retorno
+        if tipo == 'venda':
+
+            # Montando dicionário da venda atual
+            ultima_venda_dict = {
+                'xml': dados,
+                'pedido': pedido,
+                'cupom': int(list_retorno[8][34:40]),
+                'retorno': retorno
+                }
+
+            # Enviando dicionário para arquivo
+            objeto._escrever_dados_venda(ultima_venda_dict)
+
+        elif tipo == 'erro':
+            ultimo_erro = {
+                'numero_sessao': list_retorno[0],
+                'codigo_retorno': list_retorno[1],
+                'pedido': pedido
             }
 
-        # Enviando dicionário para arquivo
-        objeto._escrever_dados_venda(ultima_venda_dict)
+            # Enviando dicionário para arquivo
+            objeto._escrever_dados_erro(ultimo_erro)
+
 
     def post(self):
 
@@ -113,11 +126,18 @@ class EnviarDadosVenda(Resource):
             status = retorno.split("|")[1]
             if status == '06000':
                 self.monta_dicionario(
-                    retorno, numerador_instanciado, dados_venda, pedido_atual
+                    'venda', retorno,
+                    numerador_instanciado, dados_venda, pedido_atual
                 )
 
             elif status == '06097':
                 continue
+
+            else:
+                self.monta_dicionario(
+                    'erro', retorno,
+                    numerador_instanciado, dados_venda, pedido_atual
+                )
 
             break
 
