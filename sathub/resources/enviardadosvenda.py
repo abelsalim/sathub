@@ -25,6 +25,9 @@ import xmltodict
 
 from flask_restful import Resource
 
+from ..comum.config import basicConfig
+from logging import debug, info
+
 from ..comum.util import hexdump
 from ..comum.util import instanciar_funcoes_sat
 from ..comum.util import instanciar_numerador_sessao as instanciar_numerador
@@ -78,6 +81,11 @@ class EnviarDadosVenda(Resource):
                 'retorno': retorno
                 }
 
+            debug(
+                f'VENDA - pedido: {pedido} - código: {list_retorno[1]} '
+                f'cupom: {int(list_retorno[8][34:40])}'
+                )
+
             # Enviando dicionário para arquivo
             objeto._escrever_dados_venda(ultima_venda_dict)
 
@@ -87,6 +95,11 @@ class EnviarDadosVenda(Resource):
                 'codigo_retorno': list_retorno[1],
                 'pedido': pedido
             }
+
+            debug(
+                f'ERROR - numero sessão: {list_retorno[0]} - '
+                f'código: {list_retorno[1]} pedido: {pedido}'
+                )
 
             # Enviando dicionário para arquivo
             objeto._escrever_dados_erro(ultimo_erro)
@@ -124,6 +137,7 @@ class EnviarDadosVenda(Resource):
 
             # Obtendo retorno do cupom (Se foi emitido ou não)
             status = retorno.split("|")[1]
+            info(f'pedido: {pedido_atual} - código: {status}')
             if status == '06000':
                 self.monta_dicionario(
                     'venda', retorno,

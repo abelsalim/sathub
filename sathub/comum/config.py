@@ -26,13 +26,38 @@ import sys
 
 from logging.config import dictConfig
 
+from logging import basicConfig
+from logging import DEBUG
+from logging import FileHandler, StreamHandler, Formatter, Filter
+
 from cerberus import Validator
 
 import satcomum.constantes
 
-
 PROJECT_ROOT = os.path.join(
         os.path.abspath(os.path.dirname(__file__)), '..', '..')
+
+
+# Configuração básica de logs para o enviadadosvenda.py
+class FiltroVendas(Filter):
+    def filter(self, record):
+        for palavra in ['pedido', 'venda', 'error']:
+            if record.msg.lower().startswith(palavra):
+                return True
+
+
+# Configurações do file handler
+formater_file_handler = Formatter('%(asctime)s | %(levelname)s | %(message)s')
+file_handler = FileHandler(f'{PROJECT_ROOT}/vendas.log', 'a')
+file_handler.setLevel(DEBUG)
+file_handler.setFormatter(formater_file_handler)
+file_handler.addFilter(FiltroVendas())
+
+basicConfig(
+    level=DEBUG,
+    format='%(asctime)s | %(levelname)s | %(message)s',
+    handlers=[file_handler]
+)
 
 
 DEFAULT_LOGGING = {
