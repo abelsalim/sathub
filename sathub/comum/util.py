@@ -21,6 +21,8 @@ import json
 import os
 import random
 import sys
+import psutil
+import datetime
 
 from satcfe import BibliotecaSAT
 from satcfe import ClienteSATLocal
@@ -29,6 +31,9 @@ from ..integrador.base import FuncoesVFPE
 
 from .config import PROJECT_ROOT
 from .config import conf
+
+from ..comum.config import basicConfig
+from logging import critical
 
 
 NUM_SESSAO_MIN = 100000
@@ -174,9 +179,25 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     self._ultimas_vendas = []
 
+    def arquivo_em_execucao(self, arquivo):
+        for proc in psutil.process_iter(['open_files']):
+            proc_files = proc.info['open_files']
+            if proc_files:
+                for x in proc_files:
+                    if x.mode == 'w' and arquivo in x.path:
+                        return True
+        return False
+
     def _escrever_memoria(self):
-        with open(self._arquivo_json, 'w') as file:
-            json.dump(self._memoria, file)
+        count = 3
+        while count:
+            if self.arquivo_em_execucao(self._arquivo_json):
+                critical('erro de IO na escrita do arquivo json de SESSÕES')
+                count -= 1
+                continue
+
+            with open(self._arquivo_json, 'w') as file:
+                json.dump(self._memoria, file)
 
     def _escrever_dados_venda(self, entrada):
         if os.path.exists(self._ultimas_vendas_json):
@@ -190,9 +211,16 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     self._ultimas_vendas = []
 
-        with open(self._ultimas_vendas_json, 'w') as file_w:
-            self._ultimas_vendas.append(entrada)
-            json.dump(self._ultimas_vendas, file_w, indent=4)
+        count = 3
+        while count:
+            if self.arquivo_em_execucao(self._ultimas_vendas_json):
+                critical('erro de IO na escrita do arquivo json de VENDAS')
+                count -= 1
+                continue
+
+            with open(self._ultimas_vendas_json, 'w') as file_w:
+                self._ultimas_vendas.append(entrada)
+                json.dump(self._ultimas_vendas, file_w, indent=4)
 
     def _escrever_dados_erro(self, entrada):
         lista_erros = []
@@ -208,10 +236,17 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     lista_erros = []
 
+        count = 3
+        while count:
+            if self.arquivo_em_execucao(self._ultimos_erros_json):
+                critical('erro de IO na escrita do arquivo json de ERROR')
+                count -= 1
+                continue
+
         with open(self._ultimos_erros_json, 'w') as file_w:
             lista_erros.append(entrada)
             json.dump(lista_erros, file_w, indent=4)
-            del(lista_erros)
+            del lista_erros
 
 
 def memoize(fn):

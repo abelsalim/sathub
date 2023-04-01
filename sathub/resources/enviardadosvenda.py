@@ -104,7 +104,6 @@ class EnviarDadosVenda(Resource):
             # Enviando dicionário para arquivo
             objeto._escrever_dados_erro(ultimo_erro)
 
-
     def post(self):
 
         while True:
