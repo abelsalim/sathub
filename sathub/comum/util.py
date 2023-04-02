@@ -22,7 +22,6 @@ import os
 import random
 import sys
 import psutil
-import datetime
 
 from satcfe import BibliotecaSAT
 from satcfe import ClienteSATLocal
@@ -199,54 +198,41 @@ class NumeradorSessaoPorCaixa(object):
             with open(self._arquivo_json, 'w') as file:
                 json.dump(self._memoria, file)
 
-    def _escrever_dados_venda(self, entrada):
-        if os.path.exists(self._ultimas_vendas_json):
-            with open(self._ultimas_vendas_json) as file_r:
+    def _escrever_dados(self, entrada, arquivo_json, tamanho, tipo=False):
+        variavel = [self._ultimas_vendas if tipo == 'VENDA' else []]
+        if os.path.exists(arquivo_json):
+            with open(arquivo_json) as file_r:
                 try:
                     lista_dict = json.load(file_r)
-                    if len(lista_dict) == 20:
+                    if len(lista_dict) == tamanho:
                         lista_dict.pop(0)
+                    if tipo == 'ERROR':
+                        variavel = lista_dict
                 except ValueError:
                     pass
                 except AttributeError:
-                    self._ultimas_vendas = []
+                    variavel = []
 
         count = 3
         while count:
-            if self.arquivo_em_execucao(self._ultimas_vendas_json):
-                critical('erro de IO na escrita do arquivo json de VENDAS')
+            if self.arquivo_em_execucao(arquivo_json):
+                critical(f'erro de IO na escrita do arquivo json de {tipo}')
                 count -= 1
                 continue
 
-            with open(self._ultimas_vendas_json, 'w') as file_w:
-                self._ultimas_vendas.append(entrada)
-                json.dump(self._ultimas_vendas, file_w, indent=4)
+            with open(arquivo_json, 'w') as file_w:
+                if tipo == 'ERROR':
+                    variavel.append(entrada)
+                json.dump(variavel, file_w, indent=4)
+                if tipo == 'ERROR':
+                    del variavel
+                break
+
+    def _escrever_dados_venda(self, entrada):
+        self._escrever_dados(entrada, self._ultimas_vendas_json, 20, 'VENDA')
 
     def _escrever_dados_erro(self, entrada):
-        lista_erros = []
-        if os.path.exists(self._ultimos_erros_json):
-            with open(self._ultimos_erros_json) as file_r:
-                try:
-                    lista_dict = json.load(file_r)
-                    if len(lista_dict) == 1000:
-                        lista_dict.pop(0)
-                    lista_erros = lista_dict
-                except ValueError:
-                    pass
-                except AttributeError:
-                    lista_erros = []
-
-        count = 3
-        while count:
-            if self.arquivo_em_execucao(self._ultimos_erros_json):
-                critical('erro de IO na escrita do arquivo json de ERROR')
-                count -= 1
-                continue
-
-        with open(self._ultimos_erros_json, 'w') as file_w:
-            lista_erros.append(entrada)
-            json.dump(lista_erros, file_w, indent=4)
-            del lista_erros
+        self._escrever_dados(entrada, self._ultimos_erros_json, 1000, 'ERROR')
 
 
 def memoize(fn):
