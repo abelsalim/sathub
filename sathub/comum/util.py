@@ -178,28 +178,21 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     self._ultimas_vendas = []
 
-    def arquivo_em_execucao(self, arquivo):
-        for proc in psutil.process_iter(['open_files']):
-            proc_files = proc.info['open_files']
-            if proc_files:
-                for x in proc_files:
-                    if x.mode == 'w' and arquivo in x.path:
-                        return True
-        return False
+    # def arquivo_em_execucao(self, arquivo):
+    #     for proc in psutil.process_iter(['open_files']):
+    #         proc_files = proc.info['open_files']
+    #         if proc_files:
+    #             for x in proc_files:
+    #                 if x.mode == 'w' and arquivo in x.path:
+    #                     return True
+    #     return False
 
     def _escrever_memoria(self):
-        count = 3
-        while count:
-            if self.arquivo_em_execucao(self._arquivo_json):
-                critical('erro de IO na escrita do arquivo json de SESSÕES')
-                count -= 1
-                continue
-
-            with open(self._arquivo_json, 'w') as file:
-                json.dump(self._memoria, file)
+        with open(self._arquivo_json, 'w') as file:
+            json.dump(self._memoria, file)
 
     def _escrever_dados(self, entrada, arquivo_json, tamanho, tipo=False):
-        variavel = [self._ultimas_vendas if tipo == 'VENDA' else []]
+        variavel = (self._ultimas_vendas if tipo == 'VENDA' else [])
         if os.path.exists(arquivo_json):
             with open(arquivo_json) as file_r:
                 try:
@@ -213,20 +206,11 @@ class NumeradorSessaoPorCaixa(object):
                 except AttributeError:
                     variavel = []
 
-        count = 3
-        while count:
-            if self.arquivo_em_execucao(arquivo_json):
-                critical(f'erro de IO na escrita do arquivo json de {tipo}')
-                count -= 1
-                continue
-
-            with open(arquivo_json, 'w') as file_w:
-                if tipo == 'ERROR':
-                    variavel.append(entrada)
-                json.dump(variavel, file_w, indent=4)
-                if tipo == 'ERROR':
-                    del variavel
-                break
+        with open(arquivo_json, 'w') as file_w:
+            variavel.append(entrada)
+            json.dump(variavel, file_w, indent=4)
+            if tipo == 'ERROR':
+                del variavel
 
     def _escrever_dados_venda(self, entrada):
         self._escrever_dados(entrada, self._ultimas_vendas_json, 20, 'VENDA')
